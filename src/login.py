@@ -1,4 +1,5 @@
 import httpx
+import requests
 import boto3
 import send_telegram as send_telegram
 import logging
@@ -56,7 +57,7 @@ def decode(cipher, key):
 
 
 def test_local_api():
-    session = boto3.Session() # Pick up local admin or VM profile
+    session = boto3.Session(profile_name='roles-anywhere') #
     credentials = session.get_credentials()
     region = session.region_name or "ap-south-1"
     
@@ -77,7 +78,7 @@ def test_local_api():
     
     # 4. Execute with requests
     # NOTE: We use the signed headers and avoid letting 'requests' add extras if possible
-    response = httpx.get(url, headers=signed_headers)
+    response = requests.get(url, headers=signed_headers)
     
     print(f"Status: {response.status_code}")
     try:
@@ -93,7 +94,7 @@ test_local_api()
 
 def fyers_login():
     try:
-        session = boto3.Session() 
+        session = boto3.Session(profile_name='roles-anywhere') 
         credentials = session.get_credentials()
         region = session.region_name or "ap-south-1"
         url = f"{os.environ['API_ROOT']}/dangerous/time"
@@ -101,7 +102,7 @@ def fyers_login():
         signer = SigV4Auth(credentials, 'execute-api', region)
         signer.add_auth(request)
         signed_headers = dict(request.headers.items())
-        response = httpx.get(url, headers=signed_headers)
+        response = requests.get(url, headers=signed_headers)
         response = response.json()
         f_token = decode(response, os.environ["GEN_PASS_KEY"])
         with open("creds.json", "w") as outfile:

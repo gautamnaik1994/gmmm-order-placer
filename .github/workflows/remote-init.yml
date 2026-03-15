@@ -22,6 +22,6 @@ jobs:
         script: |
           cd gmmm-order-placer
           git pull origin main
-          /home/ubuntu/.local/bin/uv sync --no-dev --no-root
+          /home/ubuntu/.local/bin/uv sync --no-dev
 
 

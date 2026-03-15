@@ -1,0 +1,27 @@
+name: Remote init on VM
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: vm-init-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  init-vm:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy to VM
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ubuntu
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd gmmm-order-placer
+          git pull origin main
+          uv sync --no-dev --no-root
+
+

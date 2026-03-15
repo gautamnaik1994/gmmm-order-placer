@@ -1,4 +1,3 @@
-import httpx
 import requests
 import boto3
 import send_telegram as send_telegram
@@ -20,7 +19,6 @@ def decode(cipher, key):
     key = (key * reps)[:len(cipher)].encode('utf-8')
     clear = bytes(i1 ^ i2 for (i1, i2) in zip(cipher, key))
     return clear.decode('utf-8')
-
 
 
 def fyers_login():

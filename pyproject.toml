@@ -1,0 +1,18 @@
+[project]
+name = "gmmm-python-server"
+version = "0.1.0"
+description = "gmmm python server"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "aioclock>=0.3.0",
+  "boto3",
+  "httpx",
+  "python-dotenv",
+  "pytz",
+  "rel",
+  "requests",
+]
+
+[tool.uv]
+package = false

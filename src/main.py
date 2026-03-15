@@ -7,24 +7,22 @@ from aioclock.group import Group
 
 import login as login
 import send_telegram 
-import signals_fetcher
+import order_placer
 
 group = Group()
 
 
-@group.task(trigger=At(tz="UTC", hour=0, minute=0, second=0))
+@group.task(trigger=At(tz="UTC", hour=3, minute=15, second=0))
 async def login_task():
     login.fyers_login()
+    send_telegram.send_message("Login successful!")
     print("Logged in successfully!")
 
-@group.task(trigger=At(tz="UTC", hour=0, minute=0, second=0))
+@group.task(trigger=At(tz="UTC", hour=3, minute=45, second=0))
 async def place_order():
-    signals_fetcher.fetch_signals()
+    # order_placer.fetch_signals()
+    send_telegram.send_message("Signals fetched successfully!")
     print("Signals fetched successfully!")
-
-
-
-
 
 
 

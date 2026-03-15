@@ -40,7 +40,7 @@ def fyers_login():
                 'sk': 'FYERS',
                 'value': f_token,
                 'more': {
-                    'api_key': os.environ.get('FYERS_UID', ''),
+                    'api_key': os.environ["FYERS_API_KEY"],
                 },
 
             }))

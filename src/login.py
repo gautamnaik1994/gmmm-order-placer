@@ -7,11 +7,14 @@ import os
 from dotenv import load_dotenv
 from botocore.auth import SigV4Auth
 from botocore.awsrequest import AWSRequest
+from aws_setup import _sigv4_signed_headers
 
 
 load_dotenv()
 
 ENVIRONMENT = os.environ.get("ENVIRONMENT", "DEV")
+
+
 
 def decode(cipher, key):
     cipher = bytes(cipher.encode('utf-8'))
@@ -23,14 +26,8 @@ def decode(cipher, key):
 
 def fyers_login():
     try:
-        session = boto3.Session(profile_name='roles-anywhere') 
-        credentials = session.get_credentials()
-        region = session.region_name or "ap-south-1"
         url = f"{os.environ['API_ROOT']}/dangerous/time"
-        request = AWSRequest(method='GET', url=url)
-        signer = SigV4Auth(credentials, 'execute-api', region)
-        signer.add_auth(request)
-        signed_headers = dict(request.headers.items())
+        signed_headers = _sigv4_signed_headers(url)
         response = requests.get(url, headers=signed_headers)
         response = response.json()
         f_token = decode(response, os.environ["GEN_PASS_KEY"])
@@ -51,5 +48,5 @@ def fyers_login():
             f'Fyers token fetch failed \n ``` {e}```')
 
 
-if __name__ == '__main__':
-    fyers_login()
+# if __name__ == '__main__':
+#     fyers_login()

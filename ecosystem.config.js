@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "main",
-      script: "./main.py",
+      script: "src/main.py",
       interpreter: require("fs").existsSync("./.venv/bin/python")
         ? "./.venv/bin/python"
         : "python3",

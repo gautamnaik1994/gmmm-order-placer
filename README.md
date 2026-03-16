@@ -1,21 +1,21 @@
 # gmmm-python-server
 
-## Setup (uv)
+## Setup
 
-Install `uv` (macOS):
+1. Clone the repository:
 
-```bash
-brew install uv
+   ```bash
+   git clone  
+   ```
+
+2. Install uv
+
 ```
 
-Create/update the local virtualenv and install deps:
-
-```bash
-uv sync
 ```
 
-Run a script:
+1. Install Pyker
 
 ```bash
-uv run python src/signals_fetcher.py
+curl -sSL https://raw.githubusercontent.com/mrvi0/pyker/main/install.sh | bash
 ```

@@ -53,7 +53,8 @@ async def login_task():
 utc_time = ist_to_utc(8, 50)
 @group.task(trigger=At(tz="UTC", hour=utc_time["hour"], minute=utc_time["minute"], second=0))
 async def place_order():
-    # order_placer.fetch_signals()
+    order_placer.fetch_orders()
+    # order_placer.place_orders()
     send_telegram.send_message("✅ Signals fetched successfully!")
     print("Signals fetched successfully!")
 

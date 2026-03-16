@@ -5,8 +5,6 @@ import logging
 import json
 import os
 from dotenv import load_dotenv
-from botocore.auth import SigV4Auth
-from botocore.awsrequest import AWSRequest
 from aws_setup import _sigv4_signed_headers
 
 
@@ -48,5 +46,5 @@ def fyers_login():
             f'Fyers token fetch failed \n ``` {e}```')
 
 
-# if __name__ == '__main__':
-#     fyers_login()
+if __name__ == '__main__':
+    fyers_login()

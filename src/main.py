@@ -69,8 +69,10 @@ async def place_order_friday():
 @asynccontextmanager
 async def lifespan(aio_clock: AioClock) -> AsyncGenerator[AioClock]:
     print("Starting up. Remember, if your code is running, you better go catch it!")
+    send_telegram.send_message("🚀 Bot is starting up!")
     yield aio_clock
     print("Going offline. Remember, if your code is running, you better go catch it!")
+    send_telegram.send_message("🛑 Bot is going offline!")
 
 
 # app.py

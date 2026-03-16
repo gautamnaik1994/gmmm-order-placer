@@ -83,4 +83,7 @@ app.include_group(group)
 
 # main.py
 if __name__ == "__main__":
-    asyncio.run(app.serve())
+    try:
+        asyncio.run(app.serve())
+    except (KeyboardInterrupt, asyncio.CancelledError):
+        pass

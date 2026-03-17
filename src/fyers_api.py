@@ -145,7 +145,8 @@ def place_order(order_data):
     _ensure_auth()
     url = f"{fyers_api_base_url}/multi-order/sync"
     try:
-        r = httpx.post(url, headers=headers, data=json.dumps(order_data))
+        send_telegram.send_message(f"Placing order on fyers.com for {len(order_data)} orders.")
+        # r = httpx.post(url, headers=headers, data=json.dumps(order_data))
         # return response.json()
     except Exception as e:
         print(e)

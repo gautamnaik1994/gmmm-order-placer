@@ -60,6 +60,7 @@ async def place_order():
 
 @group.task(trigger=At(tz="UTC", hour=9, minute=45, second=0, at="every friday"))
 async def place_order_friday():
+    order_placer.fetch_orders()
     # order_placer.fetch_and_place_orders()
     send_telegram.send_message("✅ Order placed successfully!")
     print("Order placed successfully!")

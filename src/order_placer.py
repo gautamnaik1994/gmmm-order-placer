@@ -29,6 +29,7 @@ def fetch_and_place_orders():
     current_hour = datetime.now().strftime("%H")
     try:
         url= f"{os.environ['API_ROOT']}/signals/{todays_date}?strategy=long#{current_hour}:00"
+        logging.info(f"Fetching signals from {url}")
 
         headers = _sigv4_signed_headers(url)
         response = requests.get(url, headers=headers)
@@ -38,17 +39,13 @@ def fetch_and_place_orders():
                 f'Failed to fetch signals \n ``` {response.text}```')
             raise Exception("Failed to fetch signals")
 
+        logging.info(f"Signals fetched successfully: {response.json()}")
         response = response.json()
         if len(response["data"]) == 0:
             send_telegram.t_error('No signals found in signals')
             raise Exception("No signals found in signals")
         for item in response["data"]:
-            signals.append({
-                "symbol": item["symbol"],
-                "price": item["price"],
-                "transaction_type": -1 if item["transaction_type"] == "S" else 1,
-                "token": item["more"]["token"]
-            })
+            signals.append(item)
         fyers_api.direct_place_order_process(
                 response["data"], 5000)
         signals_path.write_text(json.dumps(signals))
@@ -68,6 +65,7 @@ def fetch_orders():
     todays_date = date_time_helpers.get_current_date()
     try:
         url = f"{os.environ['API_ROOT']}/signals/{todays_date}?strategy=long#{current_hour}:00"
+        logging.info(f"Fetching signals from {url}")
         headers = _sigv4_signed_headers(url)
         response = requests.get(url, headers=headers)
 
@@ -77,16 +75,12 @@ def fetch_orders():
             raise Exception("Failed to fetch signals")
 
         response = response.json()
+        logging.info(f"Signals fetched successfully: {response}")
         if len(response["data"]) == 0:
             send_telegram.t_error('No signals found in signals')
             raise Exception("No signals found in signals")
         for item in response["data"]:
-            signals.append({
-                "symbol": item["symbol"],
-                "price": item["price"],
-                "transaction_type": -1 if item["transaction_type"] == "S" else 1,
-                "token": item["more"]["token"]
-            })
+            signals.append(item)
         signals_path.write_text(json.dumps(signals))
         symbols = [signal["symbol"] for signal in signals]
         send_telegram.t_success(f'Signals fetched successfully for symbols: {", ".join(symbols)}')

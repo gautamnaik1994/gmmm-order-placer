@@ -124,8 +124,6 @@ if __name__ == "__main__":
         fetch_orders()
     if args.place:
         place_orders()
-    else:
-        fetch_orders()
-        place_orders()
+
 
 

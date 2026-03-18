@@ -7,6 +7,7 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 from aws_setup import _sigv4_signed_headers
+from logging_setup import configure_logging
 
 
 load_dotenv()
@@ -52,10 +53,11 @@ def fyers_login():
         }))
         send_telegram.t_success('Fyers token fetched successfully.')
     except Exception as e:
-        logging.error(e)
+        logging.exception("fyers_login() failed")
         send_telegram.t_error(
             f'Fyers token fetch failed \n ``` {e}```')
 
 
 if __name__ == '__main__':
+    configure_logging()
     fyers_login()

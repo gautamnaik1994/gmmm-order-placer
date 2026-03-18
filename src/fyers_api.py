@@ -12,6 +12,8 @@ fyers_api_base_url = 'https://api-t1.fyers.in/api/v3'
 
 _CREDS_PATH = Path(__file__).resolve().parent / "creds.json"
 
+logger = logging.getLogger(__name__)
+
 access_token: str | None = None
 api_key: str | None = None
 
@@ -79,7 +81,7 @@ def direct_place_order_process(order_data, per_script_limit):
 
 def build_fyres_order_object(order_data, per_script_limit):
     # add offline order settings
-    print("Building order object")
+    logger.info("Building order object")
     all_orders = []
     for order in order_data:
         is_offline_order = order['more']['amo']
@@ -134,7 +136,7 @@ def exit_all_positions():
             url, headers=headers, data=json.dumps(data))
         # return response.json()
     except Exception as e:
-        print(e)
+        logger.exception("exit_all_positions() failed")
         return None
 
 
@@ -150,7 +152,7 @@ def place_order(order_data):
         # r = httpx.post(url, headers=headers, data=json.dumps(order_data))
         # return response.json()
     except Exception as e:
-        print(e)
+        logger.exception("place_order() failed")
         send_telegram.send_message(f"Fyers order failed. Error: {e}")
         return None
     
@@ -165,7 +167,7 @@ def get_all_orders():
         return response.json()
     except Exception as e:
         send_telegram.send_message(f"get_all_orders() failed. Error: {e}")
-        print(e)
+        logger.exception("get_all_orders() failed")
         return None
 
 
@@ -193,7 +195,7 @@ def square_off_all_orders():
                          headers=headers, data=json.dumps(unexecuted_order))
             send_telegram.send_message(f"Delete unexecuted orders api called")
         except Exception as e:
-            print(e)
+            logger.exception("square_off_all_orders() delete failed")
             send_telegram.send_message(
                 f"Fyers oreder cancelletion failed: {e}")
             return None

@@ -12,6 +12,7 @@ from datetime import datetime
 import fyers_api
 from pathlib import Path
 from aws_setup import _sigv4_signed_headers
+from logging_setup import configure_logging
 
 
 load_dotenv()
@@ -51,7 +52,7 @@ def fetch_and_place_orders():
         signals_path.write_text(json.dumps(signals))
         send_telegram.t_success('Signals fetched successfully.')
     except Exception as e:
-        logging.error(e)
+        logging.exception("fetch_and_place_orders() failed")
         send_telegram.t_error(
             f'Failed to fetch signals \n ``` {e}```')
         
@@ -85,7 +86,7 @@ def fetch_orders():
         symbols = [signal["symbol"] for signal in signals]
         send_telegram.t_success(f'Signals fetched successfully for symbols: {", ".join(symbols)}')
     except Exception as e:
-        logging.error(e)
+        logging.exception("fetch_orders() failed")
         send_telegram.t_error(
             f'Failed to fetch signals \n ``` {e}```')
         
@@ -107,12 +108,13 @@ def place_orders():
                 signals, 5000)
         send_telegram.t_success('Orders placed successfully.')
     except Exception as e:
-        logging.error(e)
+        logging.exception("place_orders() failed")
         send_telegram.t_error(
             f'Failed to place orders \n ``` {e}```')
 
 
 if __name__ == "__main__":
+    configure_logging()
     # read args to decide whether to fetch orders or place orders or both
 
 

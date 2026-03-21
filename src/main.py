@@ -63,8 +63,11 @@ async def place_order():
     send_telegram.send_message("✅ Signals fetched successfully!")
     logger.info("Signals fetched successfully!")
 
-@group.task(trigger=At(tz="UTC", hour=9, minute=45, second=0, at="every friday"))
+utc_time = ist_to_utc(16, 0)
+@group.task(trigger=At(tz="UTC", hour=utc_time["hour"], minute=utc_time["minute"], second=0, at="every saturday"))
 async def place_order_friday():
+    send_telegram.send_message("🚀 Placing orders for Saturday! from UTC")
+    logger.info("Placing orders for Friday")
     order_placer.fetch_orders()
     order_placer.place_orders()
     # order_placer.fetch_and_place_orders()
@@ -72,6 +75,15 @@ async def place_order_friday():
     logger.info("Order placed successfully!")
 
 
+@group.task(trigger=At(tz="Asia/Kolkata", hour=16, minute=2, second=0, at="every saturday"))
+async def place_order_saturday():
+    send_telegram.send_message("🚀 Placing orders for Saturday! from Asia/Kolkata")
+    logger.info("Placing orders for Saturday")
+    order_placer.fetch_orders()
+    order_placer.place_orders()
+    # order_placer.fetch_and_place_orders()
+    send_telegram.send_message("✅ Order placed successfully!")
+    logger.info("Order placed successfully!")
 
 
 @asynccontextmanager

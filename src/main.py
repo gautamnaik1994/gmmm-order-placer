@@ -39,51 +39,46 @@ def ist_to_utc(ist_hour: int, ist_minutes: int) -> UtcTime:
 
 
 group = Group()
+timezone = "Asia/Kolkata"
 
-utc_time = ist_to_utc(8, 30)
-@group.task(trigger=At(tz="UTC", hour=utc_time["hour"], minute=utc_time["minute"], second=0))
+@group.task(trigger=At(tz=timezone, hour=8, minute=30, second=0))
 async def health_check():
     send_telegram.send_message("✅ Health check successful!")
     logger.info("Health check successful!")
 
 
-utc_time = ist_to_utc(8, 45)
-@group.task(trigger=At(tz="UTC", hour=utc_time["hour"], minute=utc_time["minute"], second=0))
+@group.task(trigger=At(tz=timezone, hour=8, minute=45, second=0))
 async def login_task():
     login.fyers_login()
     send_telegram.send_message("✅ Login successful!")
     logger.info("Logged in successfully!")
 
 
-utc_time = ist_to_utc(8, 50)
-@group.task(trigger=At(tz="UTC", hour=utc_time["hour"], minute=utc_time["minute"], second=0))
+@group.task(trigger=At(tz=timezone, hour=8, minute=50, second=0))
 async def place_order():
-    order_placer.fetch_orders()
-    order_placer.place_orders()
-    send_telegram.send_message("✅ Signals fetched successfully!")
-    logger.info("Signals fetched successfully!")
+    send_telegram.send_message("🚀 Fetching signals and placing orders!")
+    try:
+        order_placer.fetch_orders()
+        order_placer.place_orders()
+        send_telegram.send_message("✅ Signals fetched successfully!")
+        logger.info("Signals fetched successfully!")
+    except Exception as e:
+        logger.exception("place_order() failed", exc_info=e)
+        send_telegram.send_message("❌ Failed to place orders!")
 
-utc_time = ist_to_utc(16, 0)
-@group.task(trigger=At(tz="UTC", hour=utc_time["hour"], minute=utc_time["minute"], second=0, at="every saturday"))
+@group.task(trigger=At(tz=timezone, hour=15, minute=15, second=0, at="every friday"))
 async def place_order_friday():
-    send_telegram.send_message("🚀 Placing orders for Saturday! from UTC")
+    send_telegram.send_message("🚀 Placing orders for Friday! from UTC")
     logger.info("Placing orders for Friday")
-    order_placer.fetch_orders()
-    order_placer.place_orders()
-    # order_placer.fetch_and_place_orders()
-    send_telegram.send_message("✅ Order placed successfully!")
-    logger.info("Order placed successfully!")
-
-
-@group.task(trigger=At(tz="Asia/Kolkata", hour=16, minute=2, second=0, at="every saturday"))
-async def place_order_saturday():
-    send_telegram.send_message("🚀 Placing orders for Saturday! from Asia/Kolkata")
-    logger.info("Placing orders for Saturday")
-    order_placer.fetch_orders()
-    order_placer.place_orders()
-    # order_placer.fetch_and_place_orders()
-    send_telegram.send_message("✅ Order placed successfully!")
-    logger.info("Order placed successfully!")
+    try:
+        order_placer.fetch_orders()
+        order_placer.place_orders()
+        # order_placer.fetch_and_place_orders()
+        send_telegram.send_message("✅ Order placed successfully!")
+        logger.info("Order placed successfully!")
+    except Exception as e:
+        logger.exception("place_order_friday() failed", exc_info=e)
+        send_telegram.send_message("❌ Failed to place orders!")
 
 
 @asynccontextmanager

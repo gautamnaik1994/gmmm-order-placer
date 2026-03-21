@@ -86,7 +86,7 @@ def fetch_orders():
         symbols = [signal["symbol"] for signal in signals]
         send_telegram.t_success(f'Signals fetched successfully for symbols: {", ".join(symbols)}')
     except Exception as e:
-        logging.exception("fetch_orders() failed")
+        logging.exception("fetch_orders() failed", exc_info=e)
         send_telegram.t_error(
             f'Failed to fetch signals \n ``` {e}```')
         
@@ -108,7 +108,7 @@ def place_orders():
                 signals, 5000)
         send_telegram.t_success('Orders placed successfully.')
     except Exception as e:
-        logging.exception("place_orders() failed")
+        logging.exception("place_orders() failed", exc_info=e)
         send_telegram.t_error(
             f'Failed to place orders \n ``` {e}```')
 

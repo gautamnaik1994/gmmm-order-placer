@@ -63,8 +63,9 @@ async def place_order():
         send_telegram.send_message("✅ Signals fetched successfully!")
         logger.info("Signals fetched successfully!")
     except Exception as e:
-        logger.exception("place_order() failed", exc_info=e)
+        logger.exception("place_order() failed")
         send_telegram.send_message("❌ Failed to place orders!")
+
 
 @group.task(trigger=At(tz=timezone, hour=15, minute=15, second=0, at="every saturday"))
 async def place_order_friday():
@@ -77,7 +78,7 @@ async def place_order_friday():
         send_telegram.send_message("✅ Order placed successfully!")
         logger.info("Order placed successfully!")
     except Exception as e:
-        logger.exception("place_order_friday() failed", exc_info=e)
+        logger.exception("place_order_friday() failed")
         send_telegram.send_message("❌ Failed to place orders!")
 
 

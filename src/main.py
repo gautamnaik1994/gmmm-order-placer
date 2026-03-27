@@ -66,7 +66,7 @@ async def place_order():
         logger.exception("place_order() failed", exc_info=e)
         send_telegram.send_message("❌ Failed to place orders!")
 
-@group.task(trigger=At(tz=timezone, hour=15, minute=15, second=0, at="every friday"))
+@group.task(trigger=At(tz=timezone, hour=15, minute=15, second=0, at="every saturday"))
 async def place_order_friday():
     send_telegram.send_message("🚀 Placing orders for Friday! from UTC")
     logger.info("Placing orders for Friday")

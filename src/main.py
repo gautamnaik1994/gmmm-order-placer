@@ -68,13 +68,13 @@ async def place_order():
 
 
 # @group.task(trigger=At(tz=timezone, hour=15, minute=15, second=0, at="every monday"))
-@group.task(trigger=Cron(tz=timezone, cron="15 15 * * 2"))  # Every Friday at 3:15 PM IST
+@group.task(trigger=Cron(tz=timezone, cron="15 15 * * 5"))  # Every Friday at 3:15 PM IST
 async def place_order_friday():
     send_telegram.send_message("🚀 Placing orders for Friday! from UTC")
     logger.info("Placing orders for Friday")
     try:
         order_placer.fetch_orders()
-        # order_placer.place_orders()
+        order_placer.place_orders()
         # order_placer.fetch_and_place_orders()
         send_telegram.send_message("✅ Order placed successfully!")
         logger.info("Order placed successfully!")
